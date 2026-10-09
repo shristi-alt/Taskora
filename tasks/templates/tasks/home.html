@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskora - Student Task Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+            color: #1e293b;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin-top: 0;
+        }
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+        .actions a {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #2563eb;
+        }
+        .actions a.delete {
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Taskora</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Add a new task..." required>
+            <button type="submit">Add Task</button>
+        </form>
+        <ul>
+            {% for task in tasks %}
+            <li>
+                <span class="{% if task.is_completed %}completed{% endif %}">
+                    {{ task.title }}
+                </span>
+                <div class="actions">
+                    <a href="{% url 'toggle_task' task.id %}">
+                        {% if task.is_completed %}Undo{% else %}Complete{% endif %}
+                    </a>
+                    <a href="{% url 'delete_task' task.id %}" class="delete">Delete</a>
+                </div>
+            </li>
+            {% empty %}
+            <li>No tasks yet! Add one above.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
